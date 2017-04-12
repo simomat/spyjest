@@ -1,8 +1,8 @@
 
-import {assertThat, fail, is, contains, FeatureMatcher, not} from 'hamjest';
+import {assertThat} from 'hamjest';
 import {hasItem} from 'hamjest';
 
-import {wasCalled, wasCalledWith, spy} from '../src/spy';
+import {wasCalled, wasCalledWith, spy} from '../src/spyjest';
 
 
 describe("Function Matcher", function () {
