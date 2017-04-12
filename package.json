@@ -1,6 +1,6 @@
 {
   "name": "spyjest",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "matching functions using hamjest",
   "main": "index.js",
   "repository": "https://github.com/simomat/spyjest",
