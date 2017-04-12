@@ -1,0 +1,18 @@
+{
+  "name": "spyjest",
+  "version": "1.0.0",
+  "description": "matching functions using hamjest",
+  "main": "index.js",
+  "repository": "https://github.com/simomat/spyjest",
+  "author": "Matthias Simon",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha --compilers js:babel-core/register"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "hamjest": "^2.13.0",
+    "mocha": "^3.2.0"
+  }
+}
