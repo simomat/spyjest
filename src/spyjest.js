@@ -1,4 +1,4 @@
-import {strictlyEqualTo} from 'hamjest';
+import {equalTo} from 'hamjest';
 import {FunctionMatcher} from './functionmatcher'
 import {spy} from './spy'
 
@@ -7,7 +7,7 @@ function toMatches(args) {
         if (typeof arg.matches === 'function' && typeof arg.describeTo === 'function') {
             return arg
         }
-        return strictlyEqualTo(arg);
+        return equalTo(arg);
     });
 }
 
