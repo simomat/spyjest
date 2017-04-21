@@ -1,4 +1,4 @@
-export function spy(callable) {
+export function spy(callable=_=>_) {
     let calls = [];
     let spy = function () {
         calls.push(Array.from(arguments));
