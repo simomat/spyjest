@@ -1,6 +1,6 @@
 {
   "name": "spyjest",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "matching functions using hamjest",
   "main": "./lib/spyjest.js",
   "repository": "https://github.com/simomat/spyjest",
@@ -12,9 +12,10 @@
     "test": "mocha --compilers js:babel-core/register"
   },
   "devDependencies": {
-    "babel-core": "^6.24.1",
+    "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "hamjest": "^2.13.0",
     "mocha": "^3.2.0"
-  }
+  },
+  "private": true
 }
