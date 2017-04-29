@@ -1,7 +1,7 @@
 
 import {assertThat, hasItem, is} from 'hamjest';
 
-import {wasCalled, wasCalledWith, wasNotCalled, spy} from '../lib/spyjest';
+import {wasCalled, wasCalledWith, wasNotCalled, spy} from '../src/spyjest';
 
 
 describe("Function Matcher", function () {
