@@ -1,7 +1,7 @@
 
-import {assertThat,hasItem, is} from 'hamjest';
+import {assertThat, hasItem, is} from 'hamjest';
 
-import {wasCalled, wasCalledWith, spy} from '../lib/spyjest';
+import {wasCalled, wasCalledWith, wasNotCalled, spy} from '../lib/spyjest';
 
 
 describe("Function Matcher", function () {
@@ -25,7 +25,7 @@ describe("Function Matcher", function () {
     it("detect a function was not called", function () {
         let callableSpy = spy(x => x);
 
-        assertThat(callableSpy, wasCalled().times(0));
+        assertThat(callableSpy, wasNotCalled());
     });
 
     it("verifies a function was called n times", function () {

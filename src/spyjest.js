@@ -19,5 +19,9 @@ export function wasCalledWith() {
     return new FunctionMatcher(toMatches(Array.from(arguments)));
 }
 
+export function wasNotCalled() {
+    return wasCalled().times(0);
+}
+
 export {spy};
 
