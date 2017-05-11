@@ -15,12 +15,12 @@ Function verification - what it is good for:
 
 But wait, it also provides clean and expressive mocking:
  * specify what the function should return in general
- * specify what the function should when called with specific arguments
+ * specify what the function should return when called with specific arguments
  * use hamjest matchers to express function call arguments
 
 And finally, the syntax will be familiar to you if you come from Java and know how to write tests with mockito and hamcrest.
 
-#### Examples - the spy part
+### Examples - the spy part
 
 ```javascript
 let spyFunction = spy();                    // create the a spy function
@@ -82,7 +82,7 @@ Expected: a function that was called 2 times with arguments: <42>, an array cont
      but: was called 3 times with expected arguments
 ```
 
-#### Examples for mocks
+### Examples for mocks
 
 The  `spy()` object also offers ways to specify what to return inside production code if called with specific arguments.
 
