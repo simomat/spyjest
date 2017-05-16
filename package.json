@@ -11,6 +11,9 @@
     "clean": "rm ./lib/*",
     "test": "mocha --require test/init.js"
   },
+  "dependencies": {
+    "deep-equal": "^1.0.1"
+  },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",

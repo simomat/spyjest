@@ -1,6 +1,6 @@
 import {equalTo} from 'hamjest';
 import {allMatchersApply} from './util';
-import {describeMatcher, getMismatchDescription} from './describe';
+import {describeMatcher, getMismatchDescriber} from './describe';
 
 const isMatcher = obj => typeof obj.matches === 'function' && typeof obj.describeTo === 'function';
 const toMatchers = args => args.map(arg => isMatcher(arg) ? arg : equalTo(arg));
@@ -27,10 +27,11 @@ FunctionMatcher.prototype = {
         return describeMatcher(this._expectedCount, this._expectedArgs, description);
     },
     describeMismatch: function (actual, description) {
-        description.append(this._getMismatch(actual));
+        let describer = this._getMismatch(actual);
+        describer(description);
     },
     _getMismatch: function (actual) {
-        return getMismatchDescription(actual, this._expectedArgs, this._expectedCount);
+        return getMismatchDescriber(actual, this._expectedArgs, this._expectedCount);
     }
 };
 
