@@ -12,7 +12,8 @@ const matchingCallsCount = (calls, expectedArgs) =>
     .reduce((count, matched) => matched ? count + 1 : count, 0);
 
 const allEqual = (itemsA, itemsB) => {
-    for (let i = 0; i < Math.max(itemsA.length, itemsB.length); i++) {
+    let maxLength = Math.max(itemsA.length, itemsB.length);
+    for (let i = 0; i < maxLength; i++) {
         if (!deepEqual(itemsA[i], itemsB[i])) {
             return false;
         }
@@ -31,11 +32,10 @@ const buildCallGroups = calls => calls.reduce((groups, call) => {
 }, []);
 
 const getUnmatchingCalls = (calls, expectedArgs) => calls.filter(call => !allMatchersApply(expectedArgs, call));
-
 const argsToString = args => `(${args.map(arg => JSON.stringify(arg)).join(', ')})`;
-
 const describeGroupes = (groups, describe) =>
-    groups.forEach(g => describe.append(`            ${g.count} time${g.count === 1?' ':'s'} with: ${argsToString(g.args)}\n`));
+    groups.forEach(g =>
+        describe.append(`            ${g.count} time${g.count === 1?' ':'s'} with: ${argsToString(g.args)}\n`));
 
 
 export const getMismatchDescriber = (actual, expectedArgs, expectedCount) => {
@@ -45,7 +45,7 @@ export const getMismatchDescriber = (actual, expectedArgs, expectedCount) => {
 
     if (expectedArgs.length === 0) {
         if (!isNaN(expectedCount) && actual.__calls.length !== expectedCount) {
-            return d => d.append(`was called ${actual.__calls.length} times`);
+            return d => d.append(`was called ${actual.__calls.length} time${actual.__calls.length === 1?'':'s'}`);
         }
     } else {
         if (isNaN(expectedCount)) {
@@ -63,7 +63,7 @@ export const getMismatchDescriber = (actual, expectedArgs, expectedCount) => {
                     d.append(`was called ${matchingCount} times with expected arguments;`);
                     if (groups.length > 0) {
                         d.append(' and was also called\n');
-                        describeGroupes(buildCallGroups(actual.__calls), d);
+                        describeGroupes(groups, d);
                     } else {
                         d.append(' and no other call was made')
                     }

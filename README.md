@@ -35,7 +35,7 @@ One of the assertions will fail. Let's check the output:
 ```
 AssertionError: 
 Expected: a function that was not called
-     but: was called 1 times
+     but: was called 1 time
 ```
 
 Express how often a function should be called. 
@@ -54,14 +54,17 @@ Expected: a function that was called 2 times
 One simple example that shows how to check a function was called with a specific argument:
 ```javascript
 let fn = spy();
-fn(42); fn(42); fn('wat');
+fn(42); fn(42); fn('wat'); fn('wat'); fn(); fn('42', {a: [1,2,3]});
 assertThat(fn, wasCalledWith(42).times(3));  // called with 42 three times
 ```
 Will yield:
 ```
 AssertionError: 
 Expected: a function that was called 3 times with arguments: <42>
-     but: was called 2 times with expected arguments
+     but: was called 2 times with expected arguments; and was also called
+            2 times with: ("wat")
+            1 time  with: ()
+            1 time  with: ("42", {"a":[1,2,3]})
 ```
 
 Express expectation with matchers:
@@ -79,7 +82,7 @@ Will give you:
 ```
 AssertionError: 
 Expected: a function that was called 2 times with arguments: <42>, an array containing <2>
-     but: was called 3 times with expected arguments
+     but: was called 3 times with expected arguments; and no other call was made
 ```
 
 ### Examples for mocks
@@ -97,7 +100,7 @@ fn(10); // -> 15
 fn.whenCalledWith(0).doReturn(-6);
 
 // use matchers to express arguments
-fn.whenCalledWith(hasItem(5)).doReturn(0)
+fn.whenCalledWith(hasItem(5)).doReturn(0);
 
 fn([3, 4, 5, 6]); // -> 0
 
