@@ -12,15 +12,13 @@ const matchingCallsCount = (calls, expectedArgs) =>
 
 
 export const getMismatchDescription = (actual, expectedArgs, expectedCount) => {
+    if (isNaN(expectedCount) && actual.__calls.length === 0) {
+        return 'was not called';
+    }
+
     if (expectedArgs.length === 0) {
-        if (isNaN(expectedCount)) {
-            if (actual.__calls.length === 0) {
-                return 'was not called';
-            }
-        } else {
-            if (actual.__calls.length !== expectedCount) {
-                return `was called ${actual.__calls.length} times`;
-            }
+        if (!isNaN(expectedCount) && actual.__calls.length !== expectedCount) {
+            return `was called ${actual.__calls.length} times`;
         }
     } else {
         if (isNaN(expectedCount)) {
