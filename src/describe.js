@@ -1,66 +1,33 @@
-import deepEqual from 'deep-equal';
-import {allMatchersApply, zipLimitFirst} from './util';
-
-const noMatchingCall = (calls, expectedArgs) =>
-    ! calls.some(actualArgs =>
-        zipLimitFirst(expectedArgs, actualArgs)
-            .every(([expected, actual]) => expected.matches(actual)));
-
-const matchingCallsCount = (calls, expectedArgs) =>
-    calls.map(call =>
-        allMatchersApply(expectedArgs, call))
-    .reduce((count, matched) => matched ? count + 1 : count, 0);
-
-const allEqual = (itemsA, itemsB) => {
-    let maxLength = Math.max(itemsA.length, itemsB.length);
-    for (let i = 0; i < maxLength; i++) {
-        if (!deepEqual(itemsA[i], itemsB[i])) {
-            return false;
-        }
-    }
-    return true;
-};
-
-const buildCallGroups = calls => calls.reduce((groups, call) => {
-    let group = groups.find(group => allEqual(group.args, call));
-    if (group) {
-        group.count ++;
-    } else {
-        groups.push({count: 1, args: call});
-    }
-    return groups;
-}, []);
-
-const getUnmatchingCalls = (calls, expectedArgs) => calls.filter(call => !allMatchersApply(expectedArgs, call));
-const argsToString = args => `(${args.map(arg => JSON.stringify(arg)).join(', ')})`;
+const pluralS = (count, singularString = '') => count === 1 ? singularString : 's';
+const argsToString = args => `(${Array.prototype.map.call(args, arg => JSON.stringify(arg)).join(', ')})`;
 const describeGroupes = (groups, describe) =>
     groups.forEach(g =>
-        describe.append(`            ${g.count} time${g.count === 1?' ':'s'} with: ${argsToString(g.args)}\n`));
+        describe.append(`            ${g.count} time${pluralS(g.count, ' ')} with: ${argsToString(g.args)}\n`));
 
 
-export const getMismatchDescriber = (actual, expectedArgs, expectedCount) => {
-    if (isNaN(expectedCount) && actual.__calls.length === 0) {
+export const getMismatchDescriber = (actualCalls, expectedArgs, expectedCount) => {
+    if (isNaN(expectedCount) && actualCalls.isEmpty) {
         return d => d.append('was not called');
     }
 
     if (expectedArgs.length === 0) {
-        if (!isNaN(expectedCount) && actual.__calls.length !== expectedCount) {
-            return d => d.append(`was called ${actual.__calls.length} time${actual.__calls.length === 1?'':'s'}`);
+        if (!isNaN(expectedCount) && actualCalls.length !== expectedCount) {
+            return d => d.append(`was called ${actualCalls.length} time${pluralS(actualCalls.length)}`);
         }
     } else {
         if (isNaN(expectedCount)) {
-            if (noMatchingCall(actual.__calls, expectedArgs)) {
+            if (! actualCalls.hasMatching(expectedArgs)) {
                 return d => {
                     d.append('was not called with expected arguments, but was called\n');
-                    describeGroupes(buildCallGroups(actual.__calls), d);
+                    describeGroupes(actualCalls.callGroups, d);
                 }
             }
         } else {
-            let matchingCount = matchingCallsCount(actual.__calls, expectedArgs);
+            let matchingCount = actualCalls.getMatchCount(expectedArgs);
             if (matchingCount !== expectedCount) {
                 return d => {
-                    let groups = buildCallGroups(getUnmatchingCalls(actual.__calls, expectedArgs));
-                    d.append(`was called ${matchingCount} times with expected arguments;`);
+                    let groups = actualCalls.filterUnmatching(expectedArgs).callGroups;
+                    d.append(`was called ${matchingCount} time${pluralS(matchingCount)} with expected arguments;`);
                     if (groups.length > 0) {
                         d.append(' and was also called\n');
                         describeGroupes(groups, d);
@@ -87,10 +54,10 @@ export const describeMatcher = (numCalls, withArgs, description) => {
 
     if (withArgs.length > 0) {
         description.append(' with arguments: ');
-        for (let i = 0; i < withArgs.length - 1; i++) {
-            withArgs[i].describeTo(description);
+        withArgs[0].describeTo(description);
+        for (let arg of withArgs.slice(1)) {
             description.append(', ');
+            arg.describeTo(description);
         }
-        withArgs[withArgs.length - 1].describeTo(description);
     }
 };
