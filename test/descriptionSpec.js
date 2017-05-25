@@ -154,7 +154,7 @@ describe('description showcases from README', function () {
         let fn = spy();
 
         fn(42, [1, 2, 3]);
-        fn(42, [2, 33, 44], 'dont mind me');
+        fn(42, [2, 33, 44]);
         fn(42, ['a', 33, 2]);
 
         assertThat(fn, wasCalledWith(anything(), hasItem('a')));

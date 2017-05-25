@@ -1,4 +1,4 @@
-import {assertThat, hasItem, is, undef} from 'hamjest';
+import {assertThat, hasItem, is, undef, anything} from 'hamjest';
 import {wasCalled, wasCalledWith, wasNotCalled, spy} from '../src/spyjest';
 
 describe('spy feature', function () {
@@ -91,18 +91,26 @@ describe('spy feature', function () {
         assertThat(wasCalledWith(hasItem(2)).matches(fn), is(true));
     });
 
-    it('ignores arguments that are not specified in the match', function () {
+    it('all arguments must be expressed for a match', function () {
         let fn = spy();
 
         fn([1, 2, 3], 'I am ignored');
 
-        assertThat(wasCalledWith(hasItem(2)).matches(fn), is(true));
+        assertThat(wasCalledWith(hasItem(2)).matches(fn), is(false));
     });
 
-    it('passing multiple matchers is supported', function () {
+    it('less arguments than match arguments are allowed for a match', function () {
         let fn = spy();
 
-        fn(42, [1, 2, 3], 'I am ignored');
+        fn([1, 2, 3]);
+
+        assertThat(wasCalledWith(hasItem(2), undef(), anything()).matches(fn), is(true));
+    });
+
+    it('passing multiple match args is supported', function () {
+        let fn = spy();
+
+        fn(42, [1, 2, 3]);
 
         assertThat(wasCalledWith(42, hasItem(2)).matches(fn), is(true));
     });
@@ -110,7 +118,7 @@ describe('spy feature', function () {
     it('matches only if all matchers apply', function () {
         let fn = spy();
 
-        fn(42, [1, 2, 3], 'I am ignored');
+        fn(42, [1, 2, 3]);
 
         assertThat(wasCalledWith('narf', hasItem(2)).matches(fn), is(false));
     });
@@ -198,12 +206,12 @@ describe('mocking feature', function () {
         assertThat(mocker(3, 'a', 'andOneMore'), is(99));
     });
 
-    it('given a spyMock learning some matcher arguments and the function is called with more arguments, it returns the learned result', function () {
+    it('given a spyMock learning some matcher arguments and the function is called with less arguments, the missing arguments count as "undefined"', function () {
         let mocker = spy(() => 99);
 
-        mocker.whenCalledWith(is(8), is('a')).doReturn(4);
+        mocker.whenCalledWith(is(8), undef(), anything()).doReturn(4);
 
-        assertThat(mocker(8, 'a', 'andOneMore'), is(4));
+        assertThat(mocker(8), is(4));
     });
 
     it('given a spyMock learning mixed matcher and literal arguments, it returns the default result when one specified arguments does not match', function () {

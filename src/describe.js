@@ -1,9 +1,7 @@
 const pluralS = (count, singularString = '') => count === 1 ? singularString : 's';
 const argsToString = args => `(${Array.prototype.map.call(args, arg => JSON.stringify(arg)).join(', ')})`;
-const describeGroupes = (groups, describe) =>
-    groups.forEach(g =>
-        describe.append(`            ${g.count} time${pluralS(g.count, ' ')} with: ${argsToString(g.args)}\n`));
-
+const describeCallGroups = (groups, describe) => groups.forEach(group =>
+        describe.append(`            ${group.count} time${pluralS(group.count, ' ')} with: ${argsToString(group.args)}\n`));
 
 export const getMismatchDescriber = (actualCalls, expectedArgs, expectedCount) => {
     if (isNaN(expectedCount) && actualCalls.isEmpty) {
@@ -19,7 +17,7 @@ export const getMismatchDescriber = (actualCalls, expectedArgs, expectedCount) =
             if (! actualCalls.hasMatching(expectedArgs)) {
                 return d => {
                     d.append('was not called with expected arguments, but was called\n');
-                    describeGroupes(actualCalls.callGroups, d);
+                    describeCallGroups(actualCalls.callGroups, d);
                 }
             }
         } else {
@@ -30,7 +28,7 @@ export const getMismatchDescriber = (actualCalls, expectedArgs, expectedCount) =
                     d.append(`was called ${matchingCount} time${pluralS(matchingCount)} with expected arguments;`);
                     if (groups.length > 0) {
                         d.append(' and was also called\n');
-                        describeGroupes(groups, d);
+                        describeCallGroups(groups, d);
                     } else {
                         d.append(' and no other call was made')
                     }
