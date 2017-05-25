@@ -1,6 +1,6 @@
 {
   "name": "spyjest",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "matching functions using hamjest",
   "main": "./lib/spyjest.js",
   "repository": "https://github.com/simomat/spyjest",
@@ -11,6 +11,13 @@
     "clean": "rm ./lib/*",
     "test": "mocha --require test/init.js"
   },
+  "keywords": [
+    "hamjest",
+    "hamcrest",
+    "spy",
+    "verify",
+    "mock"
+  ],
   "dependencies": {
     "deep-equal": "^1.0.1"
   },
